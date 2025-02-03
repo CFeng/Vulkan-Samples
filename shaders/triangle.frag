@@ -1,4 +1,4 @@
-#version 320 es
+#version 450
 /* Copyright (c) 2019, Arm Limited and Contributors
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-precision mediump float;
+#extension GL_EXT_shader_explicit_arithmetic_types_float16 : require
 
 layout(location = 0) in vec3 in_color;
 
@@ -24,5 +24,5 @@ layout(location = 0) out vec4 out_color;
 
 void main()
 {
-	out_color = vec4(in_color, 1.0);
+	out_color = f16vec4(in_color, 1.0);
 }

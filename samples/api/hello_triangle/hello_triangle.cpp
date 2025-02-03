@@ -169,7 +169,7 @@ void HelloTriangle::init_instance()
 	std::vector<VkExtensionProperties> available_instance_extensions(instance_extension_count);
 	VK_CHECK(vkEnumerateInstanceExtensionProperties(nullptr, &instance_extension_count, available_instance_extensions.data()));
 
-	std::vector<const char *> required_instance_extensions{VK_KHR_SURFACE_EXTENSION_NAME};
+	std::vector<const char *> required_instance_extensions{VK_KHR_SURFACE_EXTENSION_NAME, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME};
 
 #if defined(VKB_DEBUG) || defined(VKB_VALIDATION_LAYERS)
 	// Validation layers help finding wrong api usage, we enable them when explicitly requested or in debug builds
@@ -299,6 +299,8 @@ void HelloTriangle::init_instance()
 #endif
 }
 
+VkPhysicalDeviceFloat16Int8FeaturesKHR extension{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR};
+
 /**
  * @brief Initializes the Vulkan physical device and logical device.
  */
@@ -358,11 +360,23 @@ void HelloTriangle::init_device()
 	VK_CHECK(vkEnumerateDeviceExtensionProperties(context.gpu, nullptr, &device_extension_count, device_extensions.data()));
 
 	// Since this sample has visual output, the device needs to support the swapchain extension
-	std::vector<const char *> required_device_extensions{VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	std::vector<const char *> required_device_extensions{VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME};
 	if (!validate_extensions(required_device_extensions, device_extensions))
 	{
 		throw std::runtime_error("Required device extensions are missing.");
 	}
+
+	uint32_t physical_device_count{0};
+	vkEnumeratePhysicalDevices(context.instance, &physical_device_count, nullptr);
+
+	std::vector<VkPhysicalDevice> physical_devices;
+	physical_devices.resize(physical_device_count);
+	vkEnumeratePhysicalDevices(context.instance, &physical_device_count, physical_devices.data());
+
+	VkPhysicalDeviceFeatures2KHR physical_device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR};
+	// VkPhysicalDeviceFloat16Int8FeaturesKHR extension{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR};
+	physical_device_features.pNext = &extension;
+	vkGetPhysicalDeviceFeatures2KHR(physical_devices[0], &physical_device_features);
 
 	// The sample uses a single graphics queue
 	const float queue_priority = 1.0f;
@@ -373,6 +387,7 @@ void HelloTriangle::init_device()
 	queue_info.pQueuePriorities = &queue_priority;
 
 	VkDeviceCreateInfo device_info{VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO};
+	device_info.pNext                   = &extension;
 	device_info.queueCreateInfoCount    = 1;
 	device_info.pQueueCreateInfos       = &queue_info;
 	device_info.enabledExtensionCount   = vkb::to_u32(required_device_extensions.size());
