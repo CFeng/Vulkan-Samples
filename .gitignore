@@ -19,3 +19,4 @@ tags
 
 # macOS
 .DS_Store
+shaders/**/*.spv
