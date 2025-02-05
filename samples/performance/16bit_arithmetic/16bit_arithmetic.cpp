@@ -24,7 +24,7 @@
 
 static constexpr unsigned Width    = 1024;
 static constexpr unsigned Height   = 1024;
-static constexpr unsigned NumBlobs = 16;
+static constexpr unsigned NumBlobs = 1;
 
 KHR16BitArithmeticSample::KHR16BitArithmeticSample()
 {
@@ -84,10 +84,10 @@ bool KHR16BitArithmeticSample::prepare(const vkb::ApplicationOptions &options)
 	glm::vec4 initial_data_fp32[NumBlobs];
 	for (unsigned i = 0; i < NumBlobs; i++)
 	{
-		initial_data_fp32[i].x = position_dist(rng);
-		initial_data_fp32[i].y = position_dist(rng);
-		initial_data_fp32[i].z = intensity_dist(rng);
-		initial_data_fp32[i].w = falloff_dist(rng);
+		initial_data_fp32[i].x = 1;
+		initial_data_fp32[i].y = 0;
+		initial_data_fp32[i].z = 1;
+		initial_data_fp32[i].w = 1;
 	}
 
 	// Convert FP32 to FP16.
