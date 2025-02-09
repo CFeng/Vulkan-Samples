@@ -79,7 +79,6 @@ bool is_depth_format(VkFormat format);
 VkFormat get_suitable_depth_format(VkPhysicalDevice             physical_device,
                                    bool                         depth_only                 = false,
                                    const std::vector<VkFormat> &depth_format_priority_list = {
-                                       VK_FORMAT_D32_SFLOAT,
                                        VK_FORMAT_D24_UNORM_S8_UINT,
                                        VK_FORMAT_D16_UNORM});
 

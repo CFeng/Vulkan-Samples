@@ -65,7 +65,7 @@ inline int32_t get_bits_per_pixel(vk::Format format)
 inline vk::Format get_suitable_depth_format(vk::PhysicalDevice             physical_device,
                                             bool                           depth_only                 = false,
                                             const std::vector<vk::Format> &depth_format_priority_list = {
-                                                vk::Format::eD32Sfloat, vk::Format::eD24UnormS8Uint, vk::Format::eD16Unorm})
+                                                vk::Format::eD24UnormS8Uint, vk::Format::eD16Unorm})
 {
 	return static_cast<vk::Format>(
 	    vkb::get_suitable_depth_format(physical_device, depth_only, reinterpret_cast<std::vector<VkFormat> const &>(depth_format_priority_list)));
