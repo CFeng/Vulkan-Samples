@@ -963,6 +963,7 @@ void HelloTriangle::init_framebuffers()
 
 HelloTriangle::HelloTriangle()
 {
+	vkb::GLSLCompiler::set_target_environment(glslang::EShTargetSpv, glslang::EShTargetSpv_1_3);
 }
 
 HelloTriangle::~HelloTriangle()

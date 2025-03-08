@@ -1,4 +1,4 @@
-#version 320 es
+#version 460
 /* Copyright (c) 2019, Arm Limited and Contributors
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -18,11 +18,17 @@
 
 precision mediump float;
 
+#extension GL_KHR_shader_subgroup_basic : enable
+#extension GL_KHR_shader_subgroup_arithmetic : enable
+#extension GL_KHR_shader_subgroup_ballot : enable
+
 layout(location = 0) in vec3 in_color;
 
 layout(location = 0) out vec4 out_color;
 
 void main()
 {
-	out_color = vec4(in_color, 1.0);
+    out_color = vec4(in_color, 1.0);
+    uint tmp  = subgroupExclusiveAdd(1);
+    out_color = vec4(tmp / 32.0, tmp / 100.0, tmp / 10.0, 1.0);
 }
