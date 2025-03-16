@@ -256,7 +256,7 @@ void HelloTriangle::init_instance()
 	VkApplicationInfo app{VK_STRUCTURE_TYPE_APPLICATION_INFO};
 	app.pApplicationName = "Hello Triangle";
 	app.pEngineName      = "Vulkan Samples";
-	app.apiVersion       = VK_MAKE_VERSION(1, 0, 0);
+	app.apiVersion       = VK_MAKE_VERSION(1, 3, 0);
 
 	VkInstanceCreateInfo instance_info{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
 	instance_info.pApplicationInfo        = &app;
@@ -382,6 +382,17 @@ void HelloTriangle::init_device()
 	volkLoadDevice(context.device);
 
 	vkGetDeviceQueue(context.device, context.graphics_queue_index, 0, &context.queue);
+
+
+	VkPhysicalDeviceSubgroupProperties subgroupProperties;
+	subgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
+	subgroupProperties.pNext = NULL;
+
+	VkPhysicalDeviceProperties2 physicalDeviceProperties;
+	physicalDeviceProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+	physicalDeviceProperties.pNext = &subgroupProperties;
+
+	vkGetPhysicalDeviceProperties2(context.gpu, &physicalDeviceProperties);
 }
 
 /**
